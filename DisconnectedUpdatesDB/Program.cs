@@ -17,8 +17,13 @@ namespace DisconnectedUpdatesDB
         {
             InitialiseDS();
 
-            displayLivres();
+            //appel de addLivre
+            addLivre("L05", "Developper en Java", "Ahmed", 5);
 
+            //appel de update
+            updateLivre("L02", "Physique", "Saida", 5);
+
+            displayLivres();
             Console.ReadKey();
 
         }
@@ -48,10 +53,41 @@ namespace DisconnectedUpdatesDB
         }
 
 
-        static void addLivre(string code, string titre, string auteur, int exemplaires)
+        static void addLivre
+            (string code, 
+            string titre, 
+            string auteur, 
+            int exemplaires)
         {
             //Ajouter le livre au DataSet
 
+            DataRow newRow = ds.Tables["Livre"].NewRow();
+            newRow["CodeL"] = code;
+            newRow["Titre"] = titre;
+            newRow["Auteur"] = auteur;
+            newRow["NbExemplaires"] = exemplaires;
+
+            ds.Tables["Livre"].Rows.Add(newRow);
+
+            Console.WriteLine(" New Row Inserted in ds");
+
+        }
+
+        static void updateLivre(string code,
+            string titre,
+            string auteur,
+            int exemplaires)
+        {
+            //Mise à jour dans le DS local
+
+            //rechercher le code
+            DataRow[] rows=ds.Tables["Livre"].Select("CodeL='" + code + "'");
+
+            rows[0]["Titre"] = titre;
+            rows[0]["Auteur"] = auteur;
+            rows[0]["NbExemplaires"] = exemplaires;
+
+            Console.WriteLine(" Update Row in ds");
         }
     }
 }

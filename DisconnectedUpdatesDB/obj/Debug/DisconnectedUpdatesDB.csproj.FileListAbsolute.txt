@@ -3,3 +3,4 @@ C:\Users\YAZIDI\Desktop\Projets CDS 2022\DisconnectedUpdatesDB\DisconnectedUpdat
 C:\Users\YAZIDI\Desktop\Projets CDS 2022\DisconnectedUpdatesDB\DisconnectedUpdatesDB\bin\Debug\DisconnectedUpdatesDB.pdb
 C:\Users\YAZIDI\Desktop\Projets CDS 2022\DisconnectedUpdatesDB\DisconnectedUpdatesDB\obj\Debug\DisconnectedUpdatesDB.exe
 C:\Users\YAZIDI\Desktop\Projets CDS 2022\DisconnectedUpdatesDB\DisconnectedUpdatesDB\obj\Debug\DisconnectedUpdatesDB.pdb
+C:\Users\YAZIDI\Desktop\Projets CDS 2022\DisconnectedUpdatesDB\DisconnectedUpdatesDB\obj\Debug\DisconnectedUpdatesDB.csprojResolveAssemblyReference.cache
