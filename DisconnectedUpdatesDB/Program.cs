@@ -10,6 +10,7 @@ namespace DisconnectedUpdatesDB
 {
     class Program
     {
+        static SqlConnection con;
         static DataSet ds = new DataSet("Biblio");
         static SqlDataAdapter livreAdapter = new SqlDataAdapter();
 
@@ -21,16 +22,41 @@ namespace DisconnectedUpdatesDB
             addLivre("L05", "Developper en Java", "Ahmed", 5);
 
             //appel de update
-            updateLivre("L02", "Physique", "Saida", 5);
+           // updateLivre("L02", "Physique", "Saida", 5);
 
+            //appel de delete
+           // deleteLivre("L04");
+            Console.WriteLine("avant acceptation");
             displayLivres();
+
+            //validation des changement dans le Dataset
+            //les opérations effectuées dans le DS sont des opérations temporaires
+            //Vous pouvez les confirmer(AcceptChanges) ou les annuler(RejectChanges)
+            //cancel
+            //ds.RejectChanges();
+
+            //Mise à jour de la base de données d'origine-avant acceptation
+
+            //Il nous faut obligatoire les requetes LMD
+            //2 manières de définir les requete LMD
+            //- manuellement ou automatiquement(- adapter par table)
+            CreateInsert();
+            //Envoyer les mise à jours vers la bd
+            livreAdapter.Update(ds.Tables["Livre"]);
+            //Confirmation
+            //doit etre faite aprs les MSJ Database
+            ds.AcceptChanges();
+            Console.WriteLine("apres MSJ-Acceptation");
+            displayLivres();
+
+           
             Console.ReadKey();
 
         }
 
         static void InitialiseDS()
         {
-            SqlConnection con = 
+            con = 
                 new 
                 SqlConnection(
      @"Data Source=.\SQLEXPRESS;Initial Catalog=Biblio;Integrated Security=true");
@@ -43,12 +69,16 @@ namespace DisconnectedUpdatesDB
         {
             foreach (DataRow row in ds.Tables["Livre"].Rows)
             {
-                Console.WriteLine("Code = {0}, Titre={1}, Auteur={2}, Exemplaires={3}",
-                    row["CodeL"],
-                    row["Titre"],
-                    row["Auteur"],
-                    row["NbExemplaires"]
-                    );
+                if (row.RowState != DataRowState.Deleted)
+                {
+                    Console.Write(row.RowState + " : ");
+                    Console.WriteLine("Code = {0}, Titre={1}, Auteur={2}, Exemplaires={3}",
+                        row["CodeL"],
+                        row["Titre"],
+                        row["Auteur"],
+                        row["NbExemplaires"]
+                        );
+                }
             }
         }
 
@@ -88,6 +118,42 @@ namespace DisconnectedUpdatesDB
             rows[0]["NbExemplaires"] = exemplaires;
 
             Console.WriteLine(" Update Row in ds");
+        }
+
+        static void deleteLivre(string code)
+        {
+            //Rechercher de la ligne
+            DataRow[] rows = 
+                ds.Tables["Livre"].Select("CodeL='" + code + "'");
+            //Appel de la fonction Delete() pour supprimer
+            //marquer la ligne comme ligne a supprimer
+            rows[0].Delete();
+        }
+
+        static void CreateInsert()
+        {
+            //Demo de la creation manuelle
+            //la requete parametrée
+            SqlCommand cmd = 
+                new SqlCommand
+                ("INSERT INTO LIVRE VALUES(@codel,@titre,@auteur,@nbexemplaire)");
+            cmd.Connection = con;
+
+            SqlParameter param =
+                new SqlParameter("codel", SqlDbType.VarChar, 10, "CodeL");
+            cmd.Parameters.Add(param);
+            param =
+                new SqlParameter("titre", SqlDbType.VarChar, 10, "Titre");
+            cmd.Parameters.Add(param);
+            param =
+                new SqlParameter("auteur", SqlDbType.VarChar, 10, "Auteur");
+            cmd.Parameters.Add(param);
+            param =
+                new SqlParameter("nbexemplaire", SqlDbType.VarChar, 10, "NbExemplaires");
+            cmd.Parameters.Add(param);
+
+            livreAdapter.InsertCommand = cmd;
+
         }
     }
 }
