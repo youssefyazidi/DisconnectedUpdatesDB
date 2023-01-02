@@ -19,13 +19,13 @@ namespace DisconnectedUpdatesDB
             InitialiseDS();
 
             //appel de addLivre
-            addLivre("L05", "Developper en Java", "Ahmed", 5);
+            addLivre("L06", "Developper en HTML", "Ahmed", 7);
 
             //appel de update
-           // updateLivre("L02", "Physique", "Saida", 5);
+           updateLivre("L02", "Physique", "Saida", 5);
 
             //appel de delete
-           // deleteLivre("L04");
+           deleteLivre("L04");
             Console.WriteLine("avant acceptation");
             displayLivres();
 
@@ -40,7 +40,16 @@ namespace DisconnectedUpdatesDB
             //Il nous faut obligatoire les requetes LMD
             //2 manières de définir les requete LMD
             //- manuellement ou automatiquement(- adapter par table)
+            //Creation manuelle
             CreateInsert();
+
+            //Creation auto - donne les 3 requetes LMD via un type 
+            // SqlCommandBuilder
+
+            SqlCommandBuilder builder = new SqlCommandBuilder(livreAdapter);
+            /*Console.WriteLine(builder.GetInsertCommand().CommandText);
+            Console.WriteLine(builder.GetDeleteCommand().CommandText);*/
+
             //Envoyer les mise à jours vers la bd
             livreAdapter.Update(ds.Tables["Livre"]);
             //Confirmation
